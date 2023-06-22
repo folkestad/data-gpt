@@ -20,6 +20,23 @@ answer questions about your data based on schema definitions.
 
 ### Run the CLI
 
-1. `poetry run python cli.py -- --question "How many users are there?"`
-for the simplest usage
+1. `poetry run python cli.py -- --question "what is the largest country by population and what is its total vaccinations?"` Example output:
+   ```
+      - QUESTION:
+
+       What is the largest country by population and what is its total vaccinations?
+
+      - SQL:
+
+        SELECT country, total_vaccinations
+        FROM `test.test.country_vaccinations`
+        JOIN `test.test.country_population`
+        ON `test.test.country_vaccinations`.country = `test.test.country_population`.Country__or_dependency_
+        ORDER BY `test.test.country_population`.Population__2020_ DESC
+        LIMIT 1;
+
+      - ANSWER:
+
+        The largest country by population is China with a total of 845,299,000 vaccinations.
+         ````
 2. `poetry run python cli.py -- --help` for help and more options 
