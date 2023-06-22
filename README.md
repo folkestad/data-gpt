@@ -38,5 +38,5 @@ answer questions about your data based on schema definitions.
       - ANSWER:
 
         The largest country by population is China with a total of 845,299,000 vaccinations.
-         ````
+
 2. `poetry run python cli.py -- --help` for help and more options 
