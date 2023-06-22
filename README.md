@@ -1,9 +1,9 @@
 # data-gpt
 
-Ask questions on your data in natural language.
+Ask questions of your data in natural language.
 
 This application uses an LLM model to
-answer questions about your data based on its schema definitions.
+answer questions about your data based on schema definitions.
 
 *Currently it supports:*
  - LLM: 
