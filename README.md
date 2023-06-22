@@ -1,13 +1,13 @@
-# bq-gpt
+# data-gpt
 
-Ask general questions on your data.
+Ask questions on your data in natural language.
 
 This application uses an LLM model to
 answer questions about your data based on its schema definitions.
 
 *Currently it supports:*
- - LLM's: 
-   - OpenAI's GPT-3.5 model.
+ - LLM: 
+   - OpenAI models
  - Data sources:
    - BigQuery 
 

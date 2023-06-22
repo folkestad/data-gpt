@@ -15,7 +15,7 @@ Table information about tables in BigQuery containing table name and column info
 Based on the table information generate a BigQuery SQL query to answer the question "{{question}}". 
 
 Samples of successful responses are listed directly below:
-- SELECT * FROM rm-data-market-dev.raw_sales.retail_sales LIMIT 10;
+- SELECT * FROM market.sales.numbers LIMIT 10;
 - SELECT name FROM project-id.dataset_id.table_id LIMIT 1;
 
 Samples of unsuccessful responses are listed directly below:
