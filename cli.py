@@ -31,7 +31,7 @@ load_dotenv()
     "--dry-run",
     "dry_run",
     default=None,
-    help="Dry run does not execute BigQuery SQL after generation",
+    help="Dry run does not execute SQL after generation",
     is_flag=True,
 )
 def cli(question, project, dataset, debug, dry_run):
