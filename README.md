@@ -40,4 +40,9 @@ answer questions about your data based on schema definitions.
 
            The largest country by population is China with a total of 845,299,000 vaccinations.
 
-2. `poetry run python cli.py -- --help` for help and more options 
+2. `poetry run python cli.py -- --help` for help and more options
+
+### Run the Slack bot
+
+1. `poetry run python slack_bot.py`
+2. In Slack, invite the bot to a channel and ask it a question, e.g. `@data-gpt what is the largest country by population and what is its total vaccinations?`
