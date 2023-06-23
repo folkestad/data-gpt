@@ -45,4 +45,5 @@ answer questions about your data based on schema definitions.
 ### Run the Slack bot
 
 1. `poetry run python slack_bot.py`
-2. In Slack, invite the bot to a channel and ask it a question, e.g. `@data-gpt what is the largest country by population and what is its total vaccinations?`
+2. In https://api.slack.com/apps, create a new app and install it to your workspace (see https://api.slack.com/start/building/bolt-python for more details)
+3. In Slack, invite the bot to a channel and ask it a question, e.g. `@data-gpt what is the largest country by population and what is its total vaccinations?`
