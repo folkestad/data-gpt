@@ -5,6 +5,8 @@ Ask questions of your data in natural language.
 This application uses an LLM model to
 answer questions about your data based on schema definitions.
 
+Or search data for terms using a vector database.
+
 *Currently it supports:*
  - LLM: 
    - OpenAI models
@@ -18,7 +20,8 @@ answer questions about your data based on schema definitions.
 1. `poetry install`
 2. `cp .env.example .env` and fill in the values. 
 See comments in `.env.example` for more details.
-3. The first time you run the application, you need to index the data
+3. The first time you run the application, you need to index your data
+which is present in BigQuery defined by `GCP_PROJECT_ID` and `GCP_DATASET_ID`.
     - `poetry run python cli.py -- --index`
 
 ### CLI
