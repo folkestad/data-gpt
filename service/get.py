@@ -61,7 +61,7 @@ def question(ctx: Context, question_text: str) -> str:
         question=question_text,
         sql=generated_sql,
         answer=query_answer,
-        silent=not ctx.DEBUG
+        silent=not ctx.DEBUG,
     )
     response = session2["answer"]
     if ctx.DEBUG:

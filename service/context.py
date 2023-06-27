@@ -13,4 +13,3 @@ class Context:
     GCP_DATASET_ID: str
     DEBUG: bool
     DRY_RUN: bool
-    INDEX: bool

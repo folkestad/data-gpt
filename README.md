@@ -18,6 +18,8 @@ answer questions about your data based on schema definitions.
 1. `poetry install`
 2. `cp .env.example .env` and fill in the values. 
 See comments in `.env.example` for more details.
+3. The first time you run the application, you need to index the data
+    - `poetry run python cli.py -- --index`
 
 ### CLI
 
@@ -48,9 +50,6 @@ See comments in `.env.example` for more details.
          - ANSWER:
 
            The largest country by population is China with a total of 845,299,000 vaccinations.
-
-NB: `--index` is optional and will index the data if it has not been indexed already
-or a different embedding model is used and re-index is needed.
 
 ##### Search for terms in data
 

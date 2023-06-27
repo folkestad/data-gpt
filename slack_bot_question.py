@@ -8,9 +8,8 @@ from slack_bolt.adapter.socket_mode import SocketModeHandler
 from dotenv import load_dotenv
 import logging
 
-from llm.models import Models
 from service.context import Context
-from service import get
+from service import get, update
 
 logging.basicConfig(level=logging.DEBUG)
 
@@ -47,9 +46,9 @@ def handle_mentions(body: dict, say: Callable, logger):
         GCP_DATASET_ID=os.getenv("GCP_DATASET_ID"),
         DEBUG=bool(os.getenv("DEBUG")),
         DRY_RUN=bool(os.getenv("DRY_RUN")),
-        INDEX=bool(os.getenv("INDEX")),
     )
 
+    update.index(ctx)
     response = get.question(ctx, question)
 
     say(response)

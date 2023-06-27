@@ -53,7 +53,7 @@ load_dotenv()
     "--index",
     "index",
     default=None,
-    help="Re-index the database",
+    help="Re-index the database. Must be added to the first command",
     is_flag=True,
 )
 def cli(question, search, project, dataset, debug, dry_run, index):
@@ -67,8 +67,9 @@ def cli(question, search, project, dataset, debug, dry_run, index):
         GCP_PROJECT_ID=project if project is not None else os.getenv("GCP_PROJECT_ID"),
         GCP_DATASET_ID=dataset if dataset is not None else os.getenv("GCP_DATASET_ID"),
         DEBUG=debug if debug is not None else is_true(os.getenv("DEBUG", "False")),
-        DRY_RUN=dry_run if dry_run is not None else is_true(os.getenv("DRY_RUN", "False")),
-        INDEX=index if index is not None else is_true(os.getenv("INDEX", "False")),
+        DRY_RUN=dry_run
+        if dry_run is not None
+        else is_true(os.getenv("DRY_RUN", "False")),
     )
 
     if ctx.DEBUG:
@@ -76,8 +77,7 @@ def cli(question, search, project, dataset, debug, dry_run, index):
 
     if ctx.INDEX:
         update.index(ctx)
-
-    if question and not search:
+    elif question and not search:
         click.echo(get.question(ctx, question))
     elif search and not question:
         click.echo(get.search(ctx, search))

@@ -10,7 +10,7 @@ import logging
 
 from llm.models import Models
 from service.context import Context
-from service import get
+from service import get, update
 from service.util import is_true
 
 logging.basicConfig(level=logging.DEBUG)
@@ -48,9 +48,9 @@ def handle_mentions(body: dict, say: Callable, logger):
         GCP_DATASET_ID=os.getenv("GCP_DATASET_ID"),
         DEBUG=is_true(os.getenv("DEBUG", "False")),
         DRY_RUN=is_true(os.getenv("DRY_RUN", "False")),
-        INDEX=is_true(os.getenv("INDEX", "False")),
     )
 
+    update.index(ctx)
     response = get.search(ctx, question)
 
     say(response)
