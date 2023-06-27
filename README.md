@@ -20,11 +20,14 @@ Or search data for terms using a vector database.
 1. `poetry install`
 2. `cp .env.example .env` and fill in the values. 
 See comments in `.env.example` for more details.
-3. The first time you run the application, you need to index your data
-which is present in BigQuery defined by `GCP_PROJECT_ID` and `GCP_DATASET_ID`.
-    - `poetry run python cli.py -- --index`
 
 ### CLI
+
+The first time you run the application, you need to index your data
+which is present in BigQuery defined by `GCP_PROJECT_ID` and `GCP_DATASET_ID`.
+   - `poetry run python cli.py -- --index`
+
+This is optional afterward.
 
 #### Help and usage
 
@@ -58,10 +61,11 @@ which is present in BigQuery defined by `GCP_PROJECT_ID` and `GCP_DATASET_ID`.
 
 - `poetry run python cli.py -- -s "vaccinations" --index`
 
-NB: `--index` is optional and will index the data if it has not been indexed already
-or a different embedding model is used and re-index is needed.
+
 
 ### Slack bots
+
+NB: Currently these re-indexes the data sources in BigQuery defined by `GCP_PROJECT_ID` and `GCP_DATASET_ID` every time they are run.
 
 1. In https://api.slack.com/apps:
    1. Create a new app and install it to your workspace (see https://api.slack.com/start/building/bolt-python for more details)
