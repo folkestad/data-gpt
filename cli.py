@@ -3,8 +3,10 @@ import os
 from dotenv import load_dotenv
 import click
 
+from llm.models import Models
 from service.context import Context
-from service.get import answer
+from service import get, update
+from service.util import is_true
 
 load_dotenv()
 
@@ -14,11 +16,24 @@ load_dotenv()
     "--question",
     "-q",
     "question",
+    default=None,
     help="".join(
         [
-            "The question to ask about your data. ",
+            "The question to ask of your data. \n",
             "Example: 'what is the largest country ",
             "by population and what is its total vaccinations?'",
+        ]
+    ),
+)
+@click.option(
+    "--search",
+    "-s",
+    "search",
+    default=None,
+    help="".join(
+        [
+            "Search for tables containing the data that you are looking for. ",
+            "Example: 'country population'",
         ]
     ),
 )
@@ -34,21 +49,40 @@ load_dotenv()
     help="Dry run does not execute SQL after generation",
     is_flag=True,
 )
-def cli(question, project, dataset, debug, dry_run):
+@click.option(
+    "--index",
+    "index",
+    default=None,
+    help="Re-index the database",
+    is_flag=True,
+)
+def cli(question, search, project, dataset, debug, dry_run, index):
     ctx = Context(
-        OPENAI_API_KEY=os.getenv("OPENAI_API_KEY"),
-        OPENAI_LLM_MODEL=os.getenv("OPENAI_LLM_MODEL"),
-        OPENAI_EMBEDDING_MODEL=os.getenv("OPENAI_EMBEDDING_MODEL"),
+        MODEL_TYPE=os.getenv("MODEL_TYPE", Models.NONE),
+        MODEL_TYPE_API_KEY=os.getenv("MODEL_TYPE_API_KEY", Models.NONE),
+        MODEL_TYPE_LLM_MODEL=os.getenv("MODEL_TYPE_LLM_MODEL", Models.NONE),
+        MODEL_TYPE_EMBEDDING_MODEL=os.getenv("MODEL_TYPE_EMBEDDING_MODEL", Models.NONE),
         CHROMADB_COLLECTION=os.getenv("CHROMADB_COLLECTION"),
         CHROMADB_N_RESULTS=int(os.getenv("CHROMADB_N_RESULTS")),
         GCP_PROJECT_ID=project if project is not None else os.getenv("GCP_PROJECT_ID"),
         GCP_DATASET_ID=dataset if dataset is not None else os.getenv("GCP_DATASET_ID"),
-        DEBUG=debug if debug is not None else os.getenv("DEBUG"),
-        DRY_RUN=dry_run if dry_run is not None else os.getenv("DRY_RUN"),
+        DEBUG=debug if debug is not None else is_true(os.getenv("DEBUG", "False")),
+        DRY_RUN=dry_run if dry_run is not None else is_true(os.getenv("DRY_RUN", "False")),
+        INDEX=index if index is not None else is_true(os.getenv("INDEX", "False")),
     )
 
-    response = answer(question, ctx)
-    click.echo(response)
+    if ctx.DEBUG:
+        print(ctx)
+
+    if ctx.INDEX:
+        update.index(ctx)
+
+    if question and not search:
+        click.echo(get.question(ctx, question))
+    elif search and not question:
+        click.echo(get.search(ctx, search))
+    else:
+        click.echo("Please provide a question or search term")
 
 
 if __name__ == "__main__":

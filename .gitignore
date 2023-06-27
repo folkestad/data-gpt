@@ -4,4 +4,4 @@
 .chroma
 **/__pycache__/
 .ruff_cache
-```
+.chroma_persist

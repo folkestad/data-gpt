@@ -16,11 +16,20 @@ answer questions about your data based on schema definitions.
 ### Prerequisites
 
 1. `poetry install`
-2. `cp .env.example .env` and fill in the values
+2. `cp .env.example .env` and fill in the values. 
+See comments in `.env.example` for more details.
 
-### Run the CLI
+### CLI
 
-1. `poetry run python cli.py -- --question "what is the largest country by population and what is its total vaccinations?"` 
+#### Help and usage
+
+- `poetry run python cli.py -- --help`
+
+#### Examples
+
+##### Ask a question
+
+- `poetry run python cli.py -- --question "what is the largest country by population and what is its total vaccinations?" --index` 
    - Example output:
       ```
          - QUESTION:
@@ -40,10 +49,26 @@ answer questions about your data based on schema definitions.
 
            The largest country by population is China with a total of 845,299,000 vaccinations.
 
-2. `poetry run python cli.py -- --help` for help and more options
+NB: `--index` is optional and will index the data if it has not been indexed already
+or a different embedding model is used and re-index is needed.
 
-### Run the Slack bot
+##### Search for terms in data
 
-1. `poetry run python slack_bot.py`
-2. In https://api.slack.com/apps, create a new app and install it to your workspace (see https://api.slack.com/start/building/bolt-python for more details)
-3. In Slack, invite the bot to a channel and ask it a question, e.g. `@data-gpt what is the largest country by population and what is its total vaccinations?`
+- `poetry run python cli.py -- -s "vaccinations" --index`
+
+NB: `--index` is optional and will index the data if it has not been indexed already
+or a different embedding model is used and re-index is needed.
+
+### Slack bots
+
+1. In https://api.slack.com/apps:
+   1. Create a new app and install it to your workspace (see https://api.slack.com/start/building/bolt-python for more details)
+   2. Under OAuth & Permissions give it the scopes `chat:write` and `app_mentions:read`
+   3. Under OAuth & Permissions find the Bot User OAuth Token and add it to your `.env` file as `SLACK_BOT_TOKEN`
+   4. Under Basic Information create an App-Level Token and add it to your `.env` file as `SLACK_APP_TOKEN`
+   5. Under Event Subscription enable Events and subscribe to the `app_mention` event
+   6. Under Socket Mode enable Socket Mode
+2. In your Slack organization, invite the bot to a channel by `@`'ing it. E.g. `@<your-slack-app-name>`
+3. Configure `.env`
+4. Run the bot with `poetry run python slack_bot_*.py`
+5. Ask it a question, e.g. `@data-gpt what is the largest country by population and what is its total vaccinations?`

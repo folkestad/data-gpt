@@ -8,8 +8,9 @@ from slack_bolt.adapter.socket_mode import SocketModeHandler
 from dotenv import load_dotenv
 import logging
 
+from llm.models import Models
 from service.context import Context
-from service.get import answer
+from service import get
 
 logging.basicConfig(level=logging.DEBUG)
 
@@ -36,18 +37,20 @@ def handle_mentions(body: dict, say: Callable, logger):
     question = remove_mentions(text)
 
     ctx = Context(
-        OPENAI_API_KEY=os.getenv("OPENAI_API_KEY"),
-        OPENAI_LLM_MODEL=os.getenv("OPENAI_LLM_MODEL"),
-        OPENAI_EMBEDDING_MODEL=os.getenv("OPENAI_EMBEDDING_MODEL"),
+        MODEL_TYPE=os.getenv("MODEL_TYPE"),
+        MODEL_TYPE_API_KEY=os.getenv("MODEL_TYPE_API_KEY"),
+        MODEL_TYPE_LLM_MODEL=os.getenv("MODEL_TYPE_LLM_MODEL"),
+        MODEL_TYPE_EMBEDDING_MODEL=os.getenv("MODEL_TYPE_EMBEDDING_MODEL"),
         CHROMADB_COLLECTION=os.getenv("CHROMADB_COLLECTION"),
         CHROMADB_N_RESULTS=int(os.getenv("CHROMADB_N_RESULTS")),
         GCP_PROJECT_ID=os.getenv("GCP_PROJECT_ID"),
         GCP_DATASET_ID=os.getenv("GCP_DATASET_ID"),
         DEBUG=bool(os.getenv("DEBUG")),
         DRY_RUN=bool(os.getenv("DRY_RUN")),
+        INDEX=bool(os.getenv("INDEX")),
     )
 
-    response = answer(question, ctx)
+    response = get.question(ctx, question)
 
     say(response)
 
