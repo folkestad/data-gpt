@@ -22,5 +22,8 @@ def index(ctx: Context):
     if ctx.DEBUG:
         print(f"{schemas=}")
 
+    if not schemas:
+        raise Exception("No schemas found in dataset to index")
+
     chromadb_memory.add(chroma_collection, schemas)
     chroma_client.persist()

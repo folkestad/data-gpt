@@ -10,6 +10,7 @@ import logging
 
 from service.context import Context
 from service import get, update
+from service.util import is_true
 
 logging.basicConfig(level=logging.DEBUG)
 
@@ -44,8 +45,8 @@ def handle_mentions(body: dict, say: Callable, logger):
         CHROMADB_N_RESULTS=int(os.getenv("CHROMADB_N_RESULTS")),
         GCP_PROJECT_ID=os.getenv("GCP_PROJECT_ID"),
         GCP_DATASET_ID=os.getenv("GCP_DATASET_ID"),
-        DEBUG=bool(os.getenv("DEBUG")),
-        DRY_RUN=bool(os.getenv("DRY_RUN")),
+        DEBUG=is_true(os.getenv("DEBUG", "False")),
+        DRY_RUN=is_true(os.getenv("DRY_RUN", "False")),
     )
 
     update.index(ctx)
