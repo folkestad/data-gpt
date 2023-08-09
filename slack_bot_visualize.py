@@ -1,6 +1,5 @@
 import logging
 import os
-import re
 from typing import Callable
 
 from dotenv import load_dotenv
@@ -9,10 +8,9 @@ from dotenv import load_dotenv
 from slack_bolt import App
 from slack_bolt.adapter.socket_mode import SocketModeHandler
 
-from llm.models import Models
-from service import store, execute, format
+from service import translate, store, format, execute
 from service.context import Context
-from service.util import is_true
+from service.util import is_true, encode_url, remove_slack_mentions
 
 logging.basicConfig(level=logging.DEBUG)
 
@@ -29,20 +27,16 @@ def log_request(logger, body, next):
     return next()
 
 
-def remove_mentions(text: str) -> str:
-    return re.sub("<@.*>", "", text)
-
-
 @app.event("app_mention")
 def handle_mentions(body: dict, say: Callable, logger):
     text = body["event"]["text"]
-    question = remove_mentions(text)
+    question = remove_slack_mentions(text)
 
     ctx = Context(
-        MODEL_TYPE=os.getenv("MODEL_TYPE", Models.NONE),
-        MODEL_TYPE_API_KEY=os.getenv("MODEL_TYPE_API_KEY", Models.NONE),
-        MODEL_TYPE_LLM_MODEL=os.getenv("MODEL_TYPE_LLM_MODEL", Models.NONE),
-        MODEL_TYPE_EMBEDDING_MODEL=os.getenv("MODEL_TYPE_EMBEDDING_MODEL", Models.NONE),
+        MODEL_TYPE=os.getenv("MODEL_TYPE"),
+        MODEL_TYPE_API_KEY=os.getenv("MODEL_TYPE_API_KEY"),
+        MODEL_TYPE_LLM_MODEL=os.getenv("MODEL_TYPE_LLM_MODEL"),
+        MODEL_TYPE_EMBEDDING_MODEL=os.getenv("MODEL_TYPE_EMBEDDING_MODEL"),
         CHROMADB_COLLECTION=os.getenv("CHROMADB_COLLECTION"),
         CHROMADB_N_RESULTS=int(os.getenv("CHROMADB_N_RESULTS")),
         GCP_PROJECT_ID=os.getenv("GCP_PROJECT_ID"),
@@ -52,10 +46,14 @@ def handle_mentions(body: dict, say: Callable, logger):
     )
 
     store.index(ctx)
-    documents = execute.search_in_store(ctx, question)
-    formatted_documents = format.documents_as_text(ctx, documents)
+    sql = translate.text_to_sql(ctx, question)
+    answer = execute.sql_in_bigquery(ctx, sql)
 
-    say(formatted_documents)
+    answer_with_explanation = format.answer_as_text(ctx, question, sql, answer)
+    say(answer_with_explanation)
+
+    visualization_url = format.answer_as_visualization(ctx, answer)
+    say(visualization_url)
 
 
 if __name__ == "__main__":

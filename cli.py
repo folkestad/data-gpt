@@ -5,7 +5,7 @@ import click
 
 from llm.models import Models
 from service.context import Context
-from service import get, update
+from service import translate, store, execute, format
 from service.util import is_true
 
 load_dotenv()
@@ -50,13 +50,13 @@ load_dotenv()
     is_flag=True,
 )
 @click.option(
-    "--index",
-    "index",
+    "--re-index",
+    "re_index",
     default=None,
     help="Re-index the database. Must be added to the first command",
     is_flag=True,
 )
-def cli(question, search, project, dataset, debug, dry_run, index):
+def cli(question, search, project, dataset, debug, dry_run, re_index):
     ctx = Context(
         MODEL_TYPE=os.getenv("MODEL_TYPE", Models.NONE),
         MODEL_TYPE_API_KEY=os.getenv("MODEL_TYPE_API_KEY", Models.NONE),
@@ -75,12 +75,17 @@ def cli(question, search, project, dataset, debug, dry_run, index):
     if ctx.DEBUG:
         print(ctx)
 
-    if ctx.INDEX:
-        update.index(ctx)
+    if re_index:
+        store.index(ctx)
     elif question and not search:
-        click.echo(get.question(ctx, question))
+        sql = translate.text_to_sql(ctx, question)
+        answer = execute.sql_in_bigquery(ctx, sql)
+        formatted_answer = format.answer_as_text(ctx, question, sql, answer)
+        click.echo(formatted_answer)
     elif search and not question:
-        click.echo(get.search(ctx, search))
+        documents = execute.search_in_store(ctx, question)
+        formatted_documents = format.documents_as_text(ctx, documents)
+        click.echo(formatted_documents)
     else:
         click.echo("Please provide a question or search term")
 

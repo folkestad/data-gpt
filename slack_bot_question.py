@@ -1,15 +1,16 @@
+import logging
 import os
 import re
 from typing import Callable
 
+from dotenv import load_dotenv
+
 # Use the package we installed
 from slack_bolt import App
 from slack_bolt.adapter.socket_mode import SocketModeHandler
-from dotenv import load_dotenv
-import logging
 
+from service import translate, store, format, execute
 from service.context import Context
-from service import get, update
 from service.util import is_true
 
 logging.basicConfig(level=logging.DEBUG)
@@ -49,10 +50,12 @@ def handle_mentions(body: dict, say: Callable, logger):
         DRY_RUN=is_true(os.getenv("DRY_RUN", "False")),
     )
 
-    update.index(ctx)
-    response = get.question(ctx, question)
+    store.index(ctx)
+    sql = translate.text_to_sql(ctx, question)
+    answer = execute.sql_in_bigquery(ctx, sql)
+    formatted_answer = format.answer_as_text(ctx, question, sql, answer)
 
-    say(response)
+    say(formatted_answer)
 
 
 if __name__ == "__main__":

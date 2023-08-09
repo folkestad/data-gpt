@@ -68,3 +68,28 @@ Try to make the answer as concise as possible.
 {{~/assistant~}}
 """
 )
+
+# noinspection PyCallingNonCallable
+generate_pie_chart_img_link = guidance(
+    """
+{{~#system~}}
+{{llm.default_system_prompt}}
+{{~/system}}
+
+{{#user~}}
+Examples:
+- https://quickchart.io/chart?c={type:'pie',data:{labels:['dog','cat','mouse'],datasets:[{data:[1,2,3]}]}}
+- https://quickchart.io/chart?c={type:'pie',data:{labels:['x','y','z'],datasets:[{data:[5,4,7]}]}}
+- https://quickchart.io/chart?c={type:'pie',data:{labels:['label1','label2','label3', 'label4'],datasets:[{data:[10.3,11.6,12.9, 13.2]}]}}
+
+Based on the examples above create a link using the data in triple ticks data:
+'''{{data}}'''
+
+Response with nothing more than the link.
+{{~/user}}
+
+{{#assistant~}}
+{{gen 'img_link' temperature=0}}
+{{~/assistant~}}
+"""
+)

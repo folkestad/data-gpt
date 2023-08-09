@@ -2106,6 +2106,23 @@ files = [
 ]
 
 [[package]]
+name = "pyshorteners"
+version = "1.0.1"
+description = "A Python lib to wrap and consume the most used shorteners APIs"
+optional = false
+python-versions = ">=3.6"
+files = [
+    {file = "pyshorteners-1.0.1.tar.gz", hash = "sha256:22045c997c4283124768c165623a267cf9ba2a7d416101e2e5fccfc244d34544"},
+]
+
+[package.dependencies]
+requests = "*"
+
+[package.extras]
+dev = ["pre-commit"]
+docs = ["sphinx"]
+
+[[package]]
 name = "python-dateutil"
 version = "2.8.2"
 description = "Extensions to the standard Python datetime module"
@@ -3111,4 +3128,4 @@ cffi = ["cffi (>=1.11)"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "e523125146da342b186d200c8e381d741c0671d6d3961585b574e47fcfec5470"
+content-hash = "40c42676e3e4d65c3576a33ef900601b2b9a27fcedf03e7e6d9beca03f472022"
