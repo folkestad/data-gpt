@@ -47,18 +47,25 @@ sql: "{{sql}}"
 answer: "{{answer}}"
 
 Formulate a formatted concise response to the user in the 
-format directly below where you fill in information in the <>:
-- QUESTION:
+format directly below where you fill in information in the <> and include triple backticks:
 
+*QUESTION*
+
+    ```
     <question>
+    ```
 
-- SQL:
+*SQL*
 
+    ```
     <sql>
+    ```
 
-- ANSWER:
+*ANSWER*
 
+    ```
     <answer>
+    ```
     
 Try to make the answer as concise as possible.
 {{~/user}}
@@ -85,7 +92,7 @@ Examples:
 Based on the examples above create a link using the data in triple ticks data:
 '''{{data}}'''
 
-Response with nothing more than the link.
+Respond with nothing more than the link.
 {{~/user}}
 
 {{#assistant~}}

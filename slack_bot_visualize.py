@@ -1,3 +1,4 @@
+import json
 import logging
 import os
 from typing import Callable
@@ -10,7 +11,7 @@ from slack_bolt.adapter.socket_mode import SocketModeHandler
 
 from service import translate, store, format, execute
 from service.context import Context
-from service.util import is_true, encode_url, remove_slack_mentions
+from service.util import is_true, remove_slack_mentions
 
 logging.basicConfig(level=logging.DEBUG)
 
@@ -50,10 +51,13 @@ def handle_mentions(body: dict, say: Callable, logger):
     answer = execute.sql_in_bigquery(ctx, sql)
 
     answer_with_explanation = format.answer_as_text(ctx, question, sql, answer)
-    say(answer_with_explanation)
+    say(answer_with_explanation, mrkdwn=True)
 
     visualization_url = format.answer_as_visualization(ctx, answer)
-    say(visualization_url)
+    visualization_url_bar_chart = visualization_url.replace("type:'pie'", "type:'bar'")
+    say("*VISUALIZATION*", mrkdwn=True)
+    say(f"<{visualization_url}|Pie Chart>", mrkdwn=True)
+    say(f"<{visualization_url_bar_chart}|Bar Chart>", mrkdwn=True)
 
 
 if __name__ == "__main__":

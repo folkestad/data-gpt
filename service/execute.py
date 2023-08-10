@@ -6,6 +6,8 @@ from service.document import Document
 
 
 def sql_in_bigquery(ctx: Context, sql: str) -> str:
+    if ctx.DEBUG:
+        print(f"{sql=}")
     # Query BigQuery
     bigquery_client = bigquery_agents.client(ctx.GCP_PROJECT_ID)
     query_answer = bigquery_agents.query(bigquery_client, sql, dry_run=ctx.DRY_RUN)
